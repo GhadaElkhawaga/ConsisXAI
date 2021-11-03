@@ -38,19 +38,6 @@ def preprocessing(out_dir, ds_name, cols, target_name, filename, file_end, targe
     y = df[target_name]
     X = df.drop([target_name], axis=1)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)    
-    for i in X.columns:
-        if (len(X[i].value_counts())>= 10):
-          bins = 4
-        else:
-          bins = len(X[i].value_counts())
-   
-    df.to_csv(os.path.join(out_dir, 'preprocessed_not_discretized_dataset_%s.csv' %(file_name)), sep=',', index=False)
-    discretizer = KBinsDiscretizer(n_bins=bins, encode='ordinal', strategy='uniform')
-    header = list(df.columns)
-    header.remove(target_name)
-    X = pd.DataFrame(discretizer.fit_transform(X), columns=header)
-    df_disc= pd.concat([X, y], axis=1, join='inner')
-    df_disc.to_csv(os.path.join(out_dir, 'discretized_dataset_%s.csv' %(file_name)), sep=',', index=False)
     return X_train, X_test, y_train, y_test, df.columns
 
 
