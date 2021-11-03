@@ -70,10 +70,7 @@ for ds in datasets:
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     ffeatures = ast.literal_eval(info_df.loc[info_df['Dataset_name'] == ds, 'Columns'].values[0])
 
-    if ds == 'Scene':
-        ffeatures = [f for f in ffeatures if f not in ["Beach", "Sunset", "FallFoliage", "Field", "Mountain", "Urban"]]
-    else:
-        ffeatures.remove(target_name)
+    ffeatures.remove(target_name)
 
     scaler = MinMaxScaler()
     X_train = pd.DataFrame(scaler.fit_transform(X_train), columns=ffeatures)
