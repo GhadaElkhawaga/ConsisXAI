@@ -5,7 +5,7 @@ import os
 from preprocessing.datasets_preprocessing import conc_dfs, preprocessing
 from sklearn.preprocessing import KBinsDiscretizer
 
-training_sizes, testing_sizes = [], []
+training_sizes, testing_sizes, total_bins = [], [], []
 datasets_folder = 'datasets_files'
 datasets = ['BreastC', 'Wine', 'Zoo', 'Diabetic','Ionosphere', 'spect', 'Vehicle', 'Scene']
 Vehicle_files = [os.path.join(datasets_folder, 'xa'+str(i)+'.dat')
@@ -79,11 +79,12 @@ for ds in datasets:
             bins = 4
         else:
             bins = len(X_df[i].value_counts())
+        total_bins.append(bins)
 
     df = pd.concat([X_df, y_series], axis=1, join='inner')
     df.to_csv(os.path.join(datasets_folder, 'preprocessed_not_discretized_dataset_%s.csv'
                            %(files_names[ds])), sep=',', index=False)
-    discretizer = KBinsDiscretizer(n_bins=bins, encode='ordinal', strategy='uniform')
+    discretizer = KBinsDiscretizer(n_bins=min(total_bins), encode='ordinal', strategy='uniform')
     header = list(updated_cols)
     header.remove(targets_names[ds])
     X_df = pd.DataFrame(discretizer.fit_transform(X_df), columns=header)
