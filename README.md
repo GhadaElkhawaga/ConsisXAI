@@ -1,6 +1,6 @@
-# ConsisXIA
-The code in this repository is an implementation of the technique proposed in the paper with the title: "ConsisXIA: Consistency-based Metrics for
-Evaluating Explainable Machine Learning". ConsisXIA is an implementation of a technique to evaluate global machine learning explainability (XIA) methods based on feature subset consistency.
+# ConsisXAI
+The code in this repository is an implementation of the technique proposed in the paper with the title: "ConsisXAI: Consistency-based Metrics for
+Evaluating Explainable Machine Learning". ConsisXAI is an implementation of a technique to evaluate global machine learning explainability (XAI) methods based on feature subset consistency.
 
 To be able to replicate the paper findings and results, follow this execution order:
 
