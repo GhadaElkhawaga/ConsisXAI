@@ -10,7 +10,7 @@ from collections import defaultdict
 
 
 datasets_folder = 'datasets_files'
-out_dir = 'output_files'
+out_dir = 'XAI_global_FeatsConsis'
 measurements_dir = os.path.join(out_dir, 'measurements')
 experiments_dir = os.path.join(out_dir, 'experimental_measurements')
 if not os.path.exists(experiments_dir):
