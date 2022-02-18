@@ -11,4 +11,4 @@ To be able to replicate the paper findings and results, follow this execution or
 
 -- "experiments.py" can be used to compute consistency ratios using the number of features in the intersection subset instead of their scores. This experiment is discussed in the paper.
 
-![Proposed Approach](https://github.com/[GhadaElkhawaga]/[ConsisXAI]/blob/[branch]/Proposed_approach2.jpg?raw=true)
+![Proposed Approach](https://github.com/[GhadaElkhawaga]/[ConsisXAI]/Proposed_approach2.jpg?raw=true)
