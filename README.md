@@ -13,5 +13,5 @@ To be able to replicate the paper findings and results, follow this execution or
 
 
 <img src=“https://github.com/GhadaElkhawaga/ConsisXAI/blob/main/Proposed_approach2.jpg” alt="Proposed Approach">
-![Proposed Approach](https://github.com/GhadaElkhawaga/ConsisXAI/blob/main/Proposed_approach2.jpg)
+![Proposed Approach](Proposed_approach2.jpg)
 
