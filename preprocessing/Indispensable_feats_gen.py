@@ -130,6 +130,14 @@ def compute_features_importance(out_dir, ds, X_train, y_train, ffeatures, target
     # calculate Information Value:
     results_df['IV'] = pd.Series(IV)
     results_df['TuRF'] = trelief_selector.feature_importances_
+    
+    #to check for negative scores and shift the column prior to values normalization
+    l_negative = results_df.columns[(results_df < 0).any()].tolist()
+    if l_negative:
+        for x in l_negative:
+          min = results_df[l_negative].min() 
+          if min < 0:
+            results_df[x] = results_df[x].apply(lambda x: x +abs(min))
     std_scaler = MinMaxScaler().fit(results_df)
     results_df = pd.DataFrame(std_scaler.transform(results_df), columns=results_df.columns)
     # get the mean score of each criteria
