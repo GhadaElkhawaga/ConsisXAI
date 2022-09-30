@@ -138,8 +138,9 @@ def compute_features_importance(out_dir, ds, X_train, y_train, ffeatures, target
           min = results_df[l_negative].min() 
           if min < 0:
             results_df[x] = results_df[x].apply(lambda x: x +abs(min))
-    std_scaler = MinMaxScaler().fit(results_df)
-    results_df = pd.DataFrame(std_scaler.transform(results_df), columns=results_df.columns)
+    for col in results_df.columns.tolist():
+        results_df[col] = MinMaxScaler().fit_transform(col)    
+    
     # get the mean score of each criteria
     results_df_mean = results_df[[x for x in results_df.columns.values]].mean()
     results_df = results_df.append(results_df_mean, ignore_index=True)
