@@ -7,14 +7,19 @@ from utils.retrieval import retrieve_artefact
 
 
 def get_threshold(threshold_min, threshold_max):
-    threshold_min_100 = int(threshold_min * 100)
+    #threshold_min_100 = int(threshold_min * 100)
     diff = threshold_max - threshold_min
-    diff_100 = int(diff * 100)
-    rest_diff = diff - (diff_100 / 100.0)
+    #diff_100 = int(diff * 100)
+    #rest_diff = diff - (diff_100 / 100.0)
     l = []
-    for i in range(threshold_min_100, diff_100):
+    y = diff
+    while y >= 0:
+        y = y - 0.01
+        l.append(y)
+    """for i in range(threshold_min_100, diff_100):
         x = (i / 100.0) + rest_diff
         l.append(x)
+    """
     idx = np.random.randint(0, len(l))
     threshold = abs(threshold_min - l[idx])
     return threshold, len(l)
