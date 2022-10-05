@@ -139,7 +139,7 @@ def compute_features_importance(out_dir, ds, X_train, y_train, ffeatures, target
           if min < 0:
             results_df[x] = results_df[x].apply(lambda x: x +abs(min))
     for col in results_df.columns.tolist():
-        results_df[col] = MinMaxScaler().fit_transform(results_df[col])    
+        results_df[col] = MinMaxScaler().fit_transform(results_df[col].values.reshape(-1,1))    
     
     # get the mean score of each criteria
     results_df_mean = results_df[[x for x in results_df.columns.values]].mean()
