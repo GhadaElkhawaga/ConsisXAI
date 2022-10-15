@@ -1,5 +1,5 @@
 # ConsisXAI
-The code in this repository is an implementation of the technique proposed in the paper with the title: "FeCoXAI: Features Consistency-based Metrics for Evaluating Explainable Artificial Intelligence". FeCoXAI is an implementation of a technique to evaluate global machine learning explainability (XAI) methods based on feature subset consistency.
+The code in this repository is an implementation of the technique proposed in the paper with the title: "FeRuXAI: Features Reduction-based Measures for Evaluating Explainable Artificial Intelligence". FeRuXAI is an implementation of a technique to evaluate global machine learning explainability (XAI) methods based on feature subset consistency.
 
 To be able to replicate the paper findings and results, follow this execution order:
 
