@@ -3,6 +3,7 @@ import ast
 import os
 from utils.retrieval import retrieve_artefact
 import xgboost as xgb
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -51,7 +52,7 @@ def train_models(models_folder, datasets, info_df, params_dir, datasets_folder, 
                 X_train = sscaler.fit_transform(X_train)
                 X_test = sscaler.fit_transform(X_test)
                 clf = LogisticRegression(C=2 ** args['logit']['C'], random_state=random_state)
-            else:
+            elif cls_method == 'xgboost':
                 clf = xgb.XGBClassifier(objective='binary:logistic',
                                         n_estimators=500,
                                         learning_rate=args['xgboost']['learning_rate'],
@@ -60,6 +61,16 @@ def train_models(models_folder, datasets, info_df, params_dir, datasets_folder, 
                                         colsample_bytree=args['xgboost']['colsample_bytree'],
                                         min_child_weight=int(args['xgboost']['min_child_weight']),
                                         seed=random_state)
+            elif cls_method == 'rf':
+                        clf = RandomForestClassifier(n_estimators=500,
+                                                        max_features=args['rf']['max_features'],
+                                                        random_state=random_state, n_jobs=-1)
+
+
+            elif cls_method == 'gbm':
+                        clf = GradientBoostingClassifier(n_estimators=500,
+                                           learning_rate=args['gbm']['learning_rate'],
+                                           random_state=random_state)
 
             model_file = os.path.join(models_folder,
                                       'unfitted_model_%s_%s.pickle' %(cls_method, file_name))
