@@ -1,0 +1,105 @@
+import os
+import ast
+import random
+import math
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import string
+from utils.retrieval import retrieve_datasets_info, retrieve_artefact, retrieve_vector
+
+
+def plotting(plot_def, plot_type):
+    if plot_type == 'bar':
+        plt.xlabel(plot_def['xlabel'])
+        plt.ylabel(plot_def['ylabel'])
+        plt.xticks(rotation=90, fontsize=5)
+        plt.yticks(fontsize=5)
+        plt.bar(plot_def['x1'], plot_def['y1'], width = 0.95, label = plot_def['label1'])
+        for i, rr in enumerate(plot_def['y1']):
+                plt.text(x = plot_def['x1'][i],  y = rr , \
+                        s = str(round(rr,5)),va = 'bottom', ha = 'center', fontdict=dict(fontsize=5))
+        plt.bar(plot_def['x2'], plot_def['y2'], width = 0.95, label = plot_def['label2'])
+        for i, cr in enumerate(plot_def['y2']):
+                plt.text(x = plot_def['x2'][i], y = cr, \
+                        s = str(round(cr,5)), va = 'bottom', ha = 'center', fontdict=dict(fontsize=5))
+        plt.legend()
+        plt.savefig(os.path.join(plot_def['dir'], plot_def['figname']), dpi=300, bbox_inches='tight');
+        plt.clf()
+        plt.close();
+
+    elif plot_type == 'scatter':
+      
+          plt.ylabel(plot_def['ylabel'])
+          plt.xlabel(plot_def['xlabel'])
+          plt.scatter(plot_def['x1'], plot_def['y1'], 
+                      marker=plot_def['marker1'], c = plot_def['c1'], label=plot_def['label1'])
+          for i in range(len(plot_def['x1'])):
+              print(type(plot_def['x1'][i]))
+              print(type(plot_def['y1'][i]))
+              plt.annotate(str(plot_def['annot1'][i]), (plot_def['x1'][i], plot_def['y1'][i] + 0.2))
+          
+          plt.scatter(plot_def['x2'], plot_def['y2'], 
+                      marker=plot_def['marker2'], c = plot_def['c2'], label=plot_def['label2'])
+          for i in range(len(plot_def['x2'])):
+              print(type(plot_def['x2'][i]))
+              print(type(plot_def['y2'][i]))
+              plt.annotate(str(plot_def['annot2'][i]), (plot_def['x2'][i], plot_def['y2'][i] + 0.2))
+          plt.legend()  
+          plt.savefig(os.path.join(plot_def['dir'],plot_def['figname']), dpi=300, bbox_inches='tight');
+          plt.clf()
+          plt.close();
+##########################################################################################################################################
+
+logs_dir = os.path.join('uci_logs')
+datasets = ['TruckFailure','Bank','Kidney','Credit','Heart','Spam','Climate', 'Adult','BreastC' ,'Diabetic','Ionosphere','spect']
+info_df = retrieve_artefact(logs_dir, 'datasets_info','.csv', ';')
+for plot_type in ['Ratios', 'AIC', 'BIC']:
+    
+    for ds in datasets: 
+      print(ds)
+      file_name = info_df.loc[info_df['Dataset_name']==ds, 'files_names'].values[0]
+      measurements_df = retrieve_artefact(logs_dir, 'measurements_%s' %file_name, '.csv').iloc[0:10,:]
+      
+      if plot_type in ['Ratios', 'AIC']:  
+          rratios_names = ['R_%s' %x.split('_', 1)[1] for x in measurements_df.columns[1:].tolist()]
+          cratios_names = ['C_%s' %x.split('_', 1)[1] for x in measurements_df.columns[1:].tolist()]
+          rratios = [ast.literal_eval(x) for x in measurements_df.iloc[0,1:].values.tolist()]
+          cratios = [ast.literal_eval(x) for x in measurements_df.iloc[1,1:].values.tolist()] 
+
+          print(type(rratios[0]))
+          print(rratios)
+          if plot_type == 'Ratios':
+              RatiosBar = {'dir': logs_dir, 'figname': 'ReductCoreRatios_%s.png'%(file_name),\
+                                        'xlabel': 'Reduct/Core for each ML Model+XAI method', 'ylabel': 'Ratios',\
+                                      'label1': 'Reduct Ratios','label2': 'Core Ratios', \
+                                      'x1': rratios_names, 'x2': cratios_names, 'y1': rratios, 'y2': cratios}
+              
+              plotting(RatiosBar, 'bar')
+          
+          elif plot_type == 'AIC':              
+              AICrratios = [ast.literal_eval(x) for x in measurements_df.iloc[2,1:].values.tolist()] 
+              AICcratios = [ast.literal_eval(x) for x in measurements_df.iloc[3,1:].values.tolist()] 
+              scatterAIC = {'dir': logs_dir, 'figname': 'AICvsRatios_%s.png'%(file_name),\
+                                    'xlabel': 'Reduct/CoreRatios', 'ylabel': 'AICRatios',\
+                                    'x1': rratios, 'x2': cratios, 'y1': AICrratios, 'y2': AICcratios,\
+                                    'label1': 'Reduct vs AIC','label2': 'Core vs AIC', \
+                                    'marker1': '^', 'marker2': 'o', 'c1': 'blue','c2':'red',\
+                                   'annot1': rratios_names, 'annot2': cratios_names}
+              
+              plotting(scatterAIC, 'scatter')
+      
+      elif plot_type == 'BIC':                
+          BICrratios = [ast.literal_eval(x) for x in measurements_df.iloc[4,1:].values.tolist()]
+          BICcratios = [ast.literal_eval(x) for x in measurements_df.iloc[5,1:].values.tolist()]
+          FeatsRed = [ast.literal_eval(x) for x in measurements_df.iloc[7,1:].values.tolist()]
+          FeatsCore = [ast.literal_eval(x) for x in measurements_df.iloc[9,1:].values.tolist()]
+      
+          scatterBIC = {'dir': logs_dir, 'figname': 'BICvsFeats_%s.png'%(file_name),\
+                                    'xlabel': '#Feats in Reduct/Core', 'ylabel': 'BICRatios',\
+                                    'x1': FeatsRed, 'x2': FeatsCore, 'y1': BICrratios, 'y2': BICcratios,\
+                                    'label1': '#Feats in Reduct vs BIC','label2': '#Feats in Core vs BIC', \
+                                    'marker1': '^', 'marker2': 'o', 'c1': 'blue','c2':'red',\
+                                   'annot1': rratios_names, 'annot2': cratios_names}
+          
+          plotting(scatterBIC, 'scatter')
